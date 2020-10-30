@@ -5,6 +5,7 @@ from flask_mail import Mail
 import json
 import os
 import math
+from pathlib import Path
 from datetime import datetime
 
 
@@ -63,6 +64,9 @@ def home():
     posts = posts[(page-1)*int(params['no_of_posts']): (page-1)*int(params['no_of_posts'])+ int(params['no_of_posts'])]
     #Pagination Logic
     #First
+    # comment by Praveen Singh Chauhan = if you want to open your posts in other then "/" you can use this code 
+    # prev = "/blog?page=" + str(page-1)  # i return posts in my blog 
+    # more = "/blog?page=" + str(page+1)
     if (page==1):
         prev = "#"
         next = "/?page="+ str(page+1)
@@ -142,6 +146,14 @@ def uploader():
     if ('user' in session and session['user'] == params['admin_user']):
         if (request.method == 'POST'):
             f= request.files['file1']
+            # add from pathlib import Path and it will check and prevent if file already exist or blank name 
+            my_file = Path(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+            if my_file.is_file():
+                return "File Already Exist ..." + str(my_file)
+            elif my_file.is_file()==False:
+                return "Blank is not Valid option"
+            # end of the checking , it will return message in new blank page
+            # if anyone make this message in dashboard .. please do let me know 
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename) ))
             return "Uploaded successfully"
 
