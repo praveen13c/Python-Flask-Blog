@@ -142,6 +142,10 @@ def uploader():
     if ('user' in session and session['user'] == params['admin_user']):
         if (request.method == 'POST'):
             f= request.files['file1']
+            # this statement is correct 
+#             if my_file.is_file():
+#                 return "File Already Exist ..." + str(my_file)
+#             elif f=="":
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename) ))
             return "Uploaded successfully"
 
